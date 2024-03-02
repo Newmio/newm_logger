@@ -19,6 +19,6 @@ type Log struct {
 	AccountInfo  string `db:"account_info" json:"account_info" xml:"account_info"`
 }
 
-func errorRespnse(err error)map[string]interface{}{
+func errorRespnse(err error) map[string]interface{} {
 	return map[string]interface{}{"error": err.Error()}
 }

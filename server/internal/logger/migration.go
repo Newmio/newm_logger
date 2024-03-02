@@ -2,7 +2,7 @@ package logger
 
 import "fmt"
 
-func (db *loggerRepo) MigrateLogger() error{
+func (db *loggerRepoPsql) MigrateLogger() error {
 	str := `create table if not exists logs(
 		id primary key,
 		error text default '',
@@ -23,7 +23,7 @@ func (db *loggerRepo) MigrateLogger() error{
 	)`
 
 	_, err := db.db.Exec(str)
-	if err != nil{
+	if err != nil {
 		return fmt.Errorf(err.Error() + "\n" + str)
 	}
 

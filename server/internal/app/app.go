@@ -1,7 +1,7 @@
 package app
 
 import (
-	"newm/internal/app/postgres"
+	"newm/internal/app/db/postgres"
 	"newm/internal/logger"
 
 	"github.com/labstack/echo/v4"

@@ -1,29 +1,29 @@
 package logger
 
-type ILoggerService interface{
-	CreateLog(log *Log)error
-	CreateArrayLog(logs []Log)error
+type ILoggerService interface {
+	CreateLog(log *Log) error
+	CreateArrayLog(logs []Log) error
 }
 
-type loggerService struct{
-	r ILoggerRepo
+type loggerService struct {
+	psql ILoggerRepoPsql
 }
 
-func NewLoggerService(r ILoggerRepo)*loggerService{
-	err := r.MigrateLogger()
-	if err != nil{
+func NewLoggerService(psql ILoggerRepoPsql) *loggerService {
+	err := psql.MigrateLogger()
+	if err != nil {
 		return nil
 	}
-	return &loggerService{r: r}
+	return &loggerService{psql: psql}
 }
 
-func (s *loggerService) CreateLog(log *Log)error{
-	return s.r.CreateLog(log)
+func (s *loggerService) CreateLog(log *Log) error {
+	return s.psql.CreateLog(log)
 }
 
-func (s *loggerService) CreateArrayLog(logs []Log)error{
-	if len(logs) > 0{
-		return s.r.CreateArrayLog(logs)
+func (s *loggerService) CreateArrayLog(logs []Log) error {
+	if len(logs) > 0 {
+		return s.psql.CreateArrayLog(logs)
 	}
 
 	return nil
