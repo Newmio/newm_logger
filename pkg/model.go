@@ -24,4 +24,5 @@ type Log struct {
 	AccountInfo  string `db:"account_info" json:"account_info" xml:"account_info"`
 }
 
+// for cfg
 var URL_LOGGER string
