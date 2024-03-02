@@ -1,4 +1,4 @@
-package pkg
+package newm_logger
 
 import (
 	"bytes"
