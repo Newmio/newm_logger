@@ -32,7 +32,7 @@ func (h *Handler) CreateLogsRout(c echo.Context) error {
 		return c.JSON(500, errorRespnse(err))
 	}
 
-	return c.JSON(200, "ok")
+	return c.JSON(200, map[string]string{"status": "ok"})
 }
 
 func (h *Handler) CreateLogRout(c echo.Context) error {
@@ -46,5 +46,5 @@ func (h *Handler) CreateLogRout(c echo.Context) error {
 		return c.JSON(500, errorRespnse(err))
 	}
 
-	return c.JSON(200, "ok")
+	return c.JSON(200, map[string]string{"status": "ok"})
 }
