@@ -1,4 +1,4 @@
-module newm-logger
+module newm
 
 go 1.21
 

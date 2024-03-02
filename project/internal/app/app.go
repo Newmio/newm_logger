@@ -1,8 +1,8 @@
 package app
 
 import (
-	"newm-logger/internal/app/postgres"
-	"newm-logger/internal/logger"
+	"newm/internal/app/postgres"
+	"newm/internal/logger"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"

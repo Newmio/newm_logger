@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"newm-logger/internal/app"
+	"newm/internal/app"
 
 	_ "github.com/lib/pq"
 )
