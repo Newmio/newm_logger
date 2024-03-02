@@ -1,3 +1,3 @@
-module github.com/Newmio/newm-logger/newm_logger
+module github.com/Newmio/newm_logger
 
 go 1.21
