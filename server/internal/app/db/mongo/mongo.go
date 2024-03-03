@@ -11,19 +11,20 @@ import (
 )
 
 func OpenDb() (*mongo.Database, error) {
-	viper.AddConfigPath("internal/app/db/mongo")
-	viper.SetConfigName("config")
-	err := viper.ReadInConfig()
+	v := viper.New()
+	v.AddConfigPath("internal/app/db/mongo")
+	v.SetConfigName("config")
+	err := v.ReadInConfig()
 	if err != nil {
 		return nil, err
 	}
 
 	db, err := initDb(db.Config{
-		Host:     viper.GetString("host"),
-		Port:     viper.GetString("port"),
-		User:     viper.GetString("user"),
-		Password: viper.GetString("password"),
-		DbName:   viper.GetString("dbName"),
+		Host:     v.GetString("host"),
+		Port:     v.GetString("port"),
+		User:     v.GetString("user"),
+		Password: v.GetString("password"),
+		DbName:   v.GetString("dbName"),
 	})
 	if err != nil {
 		return nil, err

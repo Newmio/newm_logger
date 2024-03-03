@@ -9,20 +9,21 @@ import (
 )
 
 func OpenDb() (*sqlx.DB, error) {
-	viper.AddConfigPath("internal/app/postgres")
-	viper.SetConfigName("config")
-	err := viper.ReadInConfig()
+	v := viper.New()
+	v.AddConfigPath("internal/app/db/postgres")
+	v.SetConfigName("config")
+	err := v.ReadInConfig()
 	if err != nil {
 		return nil, err
 	}
 
 	db, err := initDb(db.Config{
-		Host:     viper.GetString("host"),
-		Port:     viper.GetString("port"),
-		User:     viper.GetString("user"),
-		DbName:   viper.GetString("dbName"),
-		Password: viper.GetString("password"),
-		SslMode:  viper.GetString("sslMode"),
+		Host:     v.GetString("host"),
+		Port:     v.GetString("port"),
+		User:     v.GetString("user"),
+		Password: v.GetString("password"),
+		DbName:   v.GetString("dbName"),
+		SslMode: v.GetString("sslMode"),
 	})
 	if err != nil {
 		return nil, err

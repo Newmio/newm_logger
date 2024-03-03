@@ -3,6 +3,7 @@ module newm
 go 1.21
 
 require (
+	github.com/fatih/color v1.16.0
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/labstack/echo/v4 v4.11.4

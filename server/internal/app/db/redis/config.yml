@@ -1,4 +1,4 @@
 host: "localhost"
-port: "27017"
-password: "mongo"
+port: "6379"
+password: "qwerty"
 dbName: "0"
