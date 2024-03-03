@@ -7,14 +7,16 @@ type ILoggerService interface {
 
 type loggerService struct {
 	psql ILoggerRepoPsql
+	mongo ILoggerRepoMongo
+	redis ILoggerRepoRedis
 }
 
-func NewLoggerService(psql ILoggerRepoPsql) *loggerService {
+func NewLoggerService(psql ILoggerRepoPsql, mongo ILoggerRepoMongo, redis ILoggerRepoRedis) *loggerService {
 	err := psql.MigrateLogger()
 	if err != nil {
 		return nil
 	}
-	return &loggerService{psql: psql}
+	return &loggerService{psql: psql, mongo: mongo, redis: redis}
 }
 
 func (s *loggerService) CreateLog(log *Log) error {

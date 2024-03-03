@@ -1,7 +1,9 @@
 package app
 
 import (
+	"newm/internal/app/db/mongo"
 	"newm/internal/app/db/postgres"
+	"newm/internal/app/db/redis"
 	"newm/internal/logger"
 
 	"github.com/labstack/echo/v4"
@@ -9,8 +11,18 @@ import (
 )
 
 func InitProject() error {
-	db, err := postgres.OpenDb()
+	dbPsql, err := postgres.OpenDb()
 	if err != nil {
+		panic(err)
+	}
+
+	dbMongo, err := mongo.OpenDb()
+	if err != nil{
+		panic(err)
+	}
+
+	dbRedis, err := redis.OpenDb()
+	if err != nil{
 		panic(err)
 	}
 
@@ -18,8 +30,10 @@ func InitProject() error {
 
 	e.Use(middleware.Recover())
 
-	loggerRepo := logger.NewLoggerRepo(db)
-	loggerService := logger.NewLoggerService(loggerRepo)
+	loggerRepoPsql := logger.NewLoggerRepo(dbPsql)
+	loggerRepoMongo := logger.NewLoggerRepoMongo(dbMongo)
+	loggerRepoRedis := logger.NewLoggerRepoRedis(dbRedis)
+	loggerService := logger.NewLoggerService(loggerRepoPsql, loggerRepoMongo, loggerRepoRedis)
 	loggerHandler := logger.NewLoggerHandler(loggerService)
 	e = loggerHandler.InitLoggerRoutes(e)
 
