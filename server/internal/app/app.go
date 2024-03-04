@@ -38,7 +38,7 @@ func InitProject() error {
 	loggerHandler := logger.NewLoggerHandler(loggerService)
 	e = loggerHandler.InitLoggerRoutes(e)
 
-	for _, value := range e.Routes(){
+	for _, value := range e.Routes() {
 		color.New(color.FgRed, color.Bold).Println(fmt.Sprintf("\n\t%s : %s", value.Path, value.Method))
 	}
 

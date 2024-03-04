@@ -4,7 +4,7 @@ import "fmt"
 
 func (db *loggerRepoPsql) MigrateLogger() error {
 	str := `create table if not exists logs(
-		id primary key,
+		id serial primary key,
 		error text default '',
 		url text default '',
 		body_req text default '',

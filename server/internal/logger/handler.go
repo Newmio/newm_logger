@@ -1,6 +1,10 @@
 package logger
 
-import "github.com/labstack/echo/v4"
+import (
+	newm "newm/internal"
+
+	"github.com/labstack/echo/v4"
+)
 
 type Handler struct {
 	s ILoggerService
@@ -24,12 +28,12 @@ func (h *Handler) InitLoggerRoutes(e *echo.Echo) *echo.Echo {
 func (h *Handler) CreateLogsRout(c echo.Context) error {
 	var log []Log
 
-	if err := c.Bind(log); err != nil {
-		return c.JSON(400, errorRespnse(err))
+	if err := c.Bind(&log); err != nil {
+		return c.JSON(400, errorRespnse(newm.Trace(err)))
 	}
 
 	if err := h.s.CreateArrayLog(log); err != nil {
-		return c.JSON(500, errorRespnse(err))
+		return c.JSON(500, errorRespnse(newm.Trace(err)))
 	}
 
 	return c.JSON(200, map[string]string{"status": "ok"})
@@ -38,12 +42,12 @@ func (h *Handler) CreateLogsRout(c echo.Context) error {
 func (h *Handler) CreateLogRout(c echo.Context) error {
 	var log Log
 
-	if err := c.Bind(log); err != nil {
-		return c.JSON(400, errorRespnse(err))
+	if err := c.Bind(&log); err != nil {
+		return c.JSON(400, errorRespnse(newm.Trace(err)))
 	}
 
 	if err := h.s.CreateLog(&log); err != nil {
-		return c.JSON(500, errorRespnse(err))
+		return c.JSON(500, errorRespnse(newm.Trace(err)))
 	}
 
 	return c.JSON(200, map[string]string{"status": "ok"})

@@ -3,6 +3,7 @@ package logger
 import (
 	"context"
 	"encoding/json"
+	newm "newm/internal"
 
 	"github.com/go-redis/redis/v8"
 )
@@ -11,7 +12,7 @@ type ILoggerRepoRedis interface {
 	CreateArrayLog(logs []Log) error
 	CreateLog(log *Log) error
 	GetLogs() ([]Log, error)
-	GetLog()(Log, error)
+	GetLog() (Log, error)
 }
 
 type loggerRepoRedis struct {
@@ -22,29 +23,29 @@ func NewLoggerRepoRedis(db *redis.Client) *loggerRepoRedis {
 	return &loggerRepoRedis{db: db}
 }
 
-func (db *loggerRepoRedis) GetLog()(Log, error){
+func (db *loggerRepoRedis) GetLog() (Log, error) {
 	var log Log
 
 	tx := db.db.TxPipeline()
 
 	result, err := tx.LIndex(context.Background(), "logs", 0).Result()
-	if err != nil{
-		return log, err
+	if err != nil {
+		return log, newm.Trace(err)
 	}
 
 	err = json.Unmarshal([]byte(result), &log)
-	if err != nil{
-		return log, err
+	if err != nil {
+		return log, newm.Trace(err)
 	}
 
 	err = tx.LRem(context.Background(), "logs", 1, result).Err()
-	if err != nil{
-		return log, err
+	if err != nil {
+		return log, newm.Trace(err)
 	}
 
 	_, err = tx.Exec(context.Background())
-	if err != nil{
-		return log, err
+	if err != nil {
+		return log, newm.Trace(err)
 	}
 
 	return log, nil
@@ -57,7 +58,7 @@ func (db *loggerRepoRedis) GetLogs() ([]Log, error) {
 
 	logsStr, err := tx.LRange(context.Background(), "logs", 0, -1).Result()
 	if err != nil {
-		return nil, err
+		return nil, newm.Trace(err)
 	}
 
 	for _, value := range logsStr {
@@ -65,12 +66,12 @@ func (db *loggerRepoRedis) GetLogs() ([]Log, error) {
 
 		err = json.Unmarshal([]byte(value), &log)
 		if err != nil {
-			return nil, err
+			return nil, newm.Trace(err)
 		}
 
 		err := tx.LRem(context.Background(), "logs", 1, value).Err()
 		if err != nil {
-			return nil, err
+			return nil, newm.Trace(err)
 		}
 
 		logs = append(logs, log)
@@ -78,25 +79,35 @@ func (db *loggerRepoRedis) GetLogs() ([]Log, error) {
 
 	_, err = tx.Exec(context.Background())
 	if err != nil {
-		return nil, err
+		return nil, newm.Trace(err)
 	}
 
 	return logs, nil
 }
 
 func (db *loggerRepoRedis) CreateArrayLog(log []Log) error {
-	err := db.db.RPush(context.Background(), "logs", log).Err()
+	body, err := json.Marshal(log)
+	if err != nil{
+		return newm.Trace(err)
+	}
+
+	err = db.db.RPush(context.Background(), "logs", body).Err()
 	if err != nil {
-		return err
+		return newm.Trace(err)
 	}
 
 	return nil
 }
 
 func (db *loggerRepoRedis) CreateLog(log *Log) error {
-	err := db.db.RPush(context.Background(), "logs", log).Err()
+	body, err := json.Marshal(log)
+	if err != nil{
+		return newm.Trace(err)
+	}
+
+	err = db.db.RPush(context.Background(), "logs", body).Err()
 	if err != nil {
-		return err
+		return newm.Trace(err)
 	}
 
 	return nil
