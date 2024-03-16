@@ -22,6 +22,7 @@ type Log struct {
 	Service      string `db:"service" json:"service" xml:"service"`
 	RequestId    string `db:"req_id" json:"req_id" xml:"req_id"`
 	AccountInfo  string `db:"account_info" json:"account_info" xml:"account_info"`
+	Success      bool   `db:"success" json:"success" xml:"success"`
 }
 
 // for cfg

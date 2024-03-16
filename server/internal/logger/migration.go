@@ -19,7 +19,8 @@ func (db *loggerRepoPsql) MigrateLogger() error {
 		ip text default '',
 		service text default '',
 		req_id text default '',
-		account_info text default ''
+		account_info text default '',
+		success bool default true
 	)`
 
 	_, err := db.db.Exec(str)

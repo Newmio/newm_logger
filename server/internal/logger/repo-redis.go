@@ -28,24 +28,28 @@ func (db *loggerRepoRedis) GetLog() (Log, error) {
 
 	tx := db.db.TxPipeline()
 
-	result, err := tx.LIndex(context.Background(), "logs", 0).Result()
+	resultCmd := tx.LIndex(context.Background(), "logs", 0)
+
+	_, err := tx.Exec(context.Background())
 	if err != nil {
 		return log, newm.Trace(err)
 	}
 
-	err = json.Unmarshal([]byte(result), &log)
+	result, err := resultCmd.Result()
 	if err != nil {
 		return log, newm.Trace(err)
 	}
 
-	err = tx.LRem(context.Background(), "logs", 1, result).Err()
-	if err != nil {
-		return log, newm.Trace(err)
-	}
+	if result != "" {
+		err := json.Unmarshal([]byte(result), &log)
+		if err != nil {
+			return log, newm.Trace(err)
+		}
 
-	_, err = tx.Exec(context.Background())
-	if err != nil {
-		return log, newm.Trace(err)
+		err = db.db.LRem(context.Background(), "logs", 1, result).Err()
+		if err != nil {
+			return log, newm.Trace(err)
+		}
 	}
 
 	return log, nil
@@ -87,7 +91,7 @@ func (db *loggerRepoRedis) GetLogs() ([]Log, error) {
 
 func (db *loggerRepoRedis) CreateArrayLog(log []Log) error {
 	body, err := json.Marshal(log)
-	if err != nil{
+	if err != nil {
 		return newm.Trace(err)
 	}
 
@@ -101,7 +105,7 @@ func (db *loggerRepoRedis) CreateArrayLog(log []Log) error {
 
 func (db *loggerRepoRedis) CreateLog(log *Log) error {
 	body, err := json.Marshal(log)
-	if err != nil{
+	if err != nil {
 		return newm.Trace(err)
 	}
 

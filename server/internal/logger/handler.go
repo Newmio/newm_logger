@@ -25,14 +25,18 @@ func (h *Handler) InitLoggerRoutes(e *echo.Echo) *echo.Echo {
 	return e
 }
 
-func (h *Handler) CreateLogsRout(c echo.Context) error {
-	var log []Log
+type logs struct {
+	Logs Log `json:"logs"`
+}
 
-	if err := c.Bind(&log); err != nil {
+func (h *Handler) CreateLogsRout(c echo.Context) error {
+	var logs []logs
+
+	if err := c.Bind(&logs); err != nil {
 		return c.JSON(400, errorRespnse(newm.Trace(err)))
 	}
 
-	if err := h.s.CreateArrayLog(log); err != nil {
+	if err := h.s.CreateArrayLog(nil); err != nil {
 		return c.JSON(500, errorRespnse(newm.Trace(err)))
 	}
 
