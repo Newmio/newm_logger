@@ -8,6 +8,8 @@ import (
 	"net/http"
 )
 
+//////
+
 func CreateLog(log Log)error{
 	body, err := json.Marshal(log)
 	if err != nil{
